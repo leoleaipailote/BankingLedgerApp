@@ -20,12 +20,10 @@ public class SystemController {
             String serverTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME); // Ensure correct format
             return ResponseEntity.ok(new PingResponse(serverTime));
         } catch (Exception e) {
-            // Re-throw and let the global handler manage it
             throw new PingRequestException("Failed to process ping request", e);
         }
     }
 
-    // Inner class for the Ping response to match the schema
     public static class PingResponse {
         private String serverTime;
 

@@ -33,4 +33,8 @@ public class EventStoreService {
                 .filter(event -> event.getUserId().equals(userId))
                 .collect(Collectors.toList());
     }
+
+    public int size() {
+        return eventStore.size();
+    }
 }

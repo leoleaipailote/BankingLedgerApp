@@ -22,6 +22,7 @@ public class TransactionService {
         LocalDateTime timestamp = LocalDateTime.now();
         double balanceAmount = getCurrentBalance(userId);
         Balance balance = new Balance(Double.toString(balanceAmount), currency, debitOrCredit);
+
         TransactionEvent event = new TransactionEvent(transactionId, userId, timestamp, amount,
                 currency, debitOrCredit, status, balance);
         eventStoreService.addEvent(event);
@@ -53,7 +54,7 @@ public class TransactionService {
         return event;
     }
 
-    private double getCurrentBalance(String userId) {
+    public double getCurrentBalance(String userId) {
         double currentBalance = 0;
         List<TransactionEvent> events = eventStoreService.getEventsForUser(userId);
         for (TransactionEvent event : events) {

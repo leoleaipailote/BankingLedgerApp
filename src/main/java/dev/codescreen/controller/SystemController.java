@@ -17,7 +17,7 @@ public class SystemController {
     @GetMapping("/ping")
     public ResponseEntity<PingResponse> ping() {
         try {
-            String serverTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME); // Ensure correct format
+            String serverTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             return ResponseEntity.ok(new PingResponse(serverTime));
         } catch (Exception e) {
             throw new PingRequestException("Failed to process ping request", e);

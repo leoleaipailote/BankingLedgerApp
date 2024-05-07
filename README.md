@@ -42,17 +42,94 @@ Here’s a breakdown of the key criteria we’ll be considering when grading you
 **Documentation and Clarity:** We’ll assess the clarity of your documentation, including comments within the code, README files, architectural diagrams, and explanations of design decisions. Your documentation should provide sufficient context for reviewers to understand the problem, solution, and implementation details.
 
 # Candidate README
-## Bootstrap instructions
-*Replace this: To run this server locally, do the following:*
+## Bootstrap Instructions
 
-## Design considerations
-*Replace this: I decided to build X for Y reasons.*
+To run this server locally, follow these steps:
+
+1. **Prerequisites**:
+   - Ensure you have Java JDK 11 or higher installed.
+   - Maven is required for building and running the application.
+
+2. **Build the project**:
+   - Run `mvn clean install` to build the project and install the dependencies.
+
+3. **Run the application**:
+   - Execute `mvn spring-boot:run` to start the server.
+   - The server will be available at `http://localhost:8080`
+
+4. **Access the API**:
+   - Use a tool like Postman or navigate to `http://localhost:8080/api/ping` to test if the server is running.
+    Upon successful connection, a response status of 200 should be received along with a JSON object that contains the serverTime
+    in a date format.
+   - To use the 'load' endpoint, send a put request to `http://localhost:8080/api/load/{messageId}` with the following body format:
+   {
+        "messageId": "{messageId}",
+        "userId": "{userId}",
+        "transactionAmount": {
+            "amount": "{amount}",
+            "currency": "{currency}",
+            "debitOrCredit": "CREDIT"
+        }
+    }
+    - To use the 'authorize' endpoint, send a put request to `http://localhost:8000/api/authorization/{messageId}` with the same body format used for the 'load' endpoint
+
+
+
+## Design Considerations
+
+For this project, I chose to implement a Spring Boot application due to its extensive support for REST APIs and its ability to quickly bootstrap robust web applications. Below are the design details and considerations made during the development:
+
+- **TransactionEvent Object**: This is a central class in the application that encapsulates all relevant data for a transaction event. It includes details such as:
+  - **Type of Transaction**: Whether it's a credit (add funds) or a debit (reduce funds).
+  - **Status**: Indicates if an authorization request was approved or denied.
+  - **User ID**: The identifier for the user associated with the transaction.
+  - **Transaction Amount**: The amount of money to be added or withdrawn.
+  - **Balance Object**: Holds the current balance, including the amount and currency.
+
+- **Event Sourcing**: To ensure all changes to the application state are stored and traceable, I implemented an event sourcing pattern. This involves:
+  - **Storing Events**: Each transaction creates a `TransactionEvent` that is stored in an `EventStore`, a collection that logs every event.
+  - **State Reconstruction**: The current balance is dynamically calculated by iterating through all events associated with a user ID in the `EventStore`. This approach ensures that the system state can be reconstructed at any point from the event log.
+
+- **Service Layer**:
+  - **Load and Authorization Services**: The `loadFunds` and `authorizeFunds` endpoints each trigger specific behaviors handled by `processLoad` and `processAuthorization` methods, respectively. These methods utilize the transaction data contained in the request bodies to:
+    - Create a `TransactionEvent`.
+    - Add this event to the `EventStore`.
+    - Calculate the updated balance using `getBalance`, which aggregates the amounts from relevant transaction events to compute the current balance and stores it in the `TransactionEvent`.
+  
+  - **Response Formation**: After updating the event and calculating the balance, the newly created `TransactionEvent` is used to format and send a structured response back to the client. Responses for the Authorization request have an additional field that
+  capture whether the debit request was authorized or declined (calculated based on whether account had sufficient funds before the request was made).
+
+- **Error Handling and Validation**: Error handling ensures that only valid transactions are processed. Any attempt to process an invalid transaction (e.g., negative amounts, non-numerical amounts) is immediately caught and handled appropriately, returning a 500 error code.
+
+- ### Unit Testing
+
+- **JUnit**: The primary framework used for unit testing. Each component, especially business logic handlers and utility classes, has corresponding unit tests that validate individual functions under controlled conditions.
+
+- ### Integration Testing
+
+- **MockMvc**: Utilized for integration testing, allowing simulation of HTTP requests and assertion of responses for the REST API. This framework is instrumental in testing controller endpoints under conditions that closely mimic actual runtime operation.
+- **Endpoint Testing**: Specific tests for `loadFunds` and `authorizeFunds` endpoints check how the system processes transactions, including both normal and edge cases.
+- **Exception Handling**: Tests also cover scenarios where exceptions are expected to be thrown, ensuring that the system responds with appropriate error messages and status codes.
+- **Response Validation**: Integration tests verify that responses are correctly formatted and contain all expected elements, ensuring the API's contract is adhered to.
+
+
 
 ## Assumptions
-*Replace this: If you made any assumption in designing the service, document it here*
 
-## Bonus: Deployment considerations
-*Replace this: If I were to deploy this, I would host it in this way with these technologies.*
+- **Load**: It is assumed that the application will handle a moderate load. For high-load scenarios, further optimizations and configurations would be required.
+- **Data Persistence**: For simplicity and demonstration purposes, the application uses in-memory storage which means data is not persistent across restarts.
+
+
+## Bonus: Deployment Considerations
+
+If I were to deploy this application, I would use the following strategy and technologies:
+
+- **Containerization**: Docker would be used to containerize the application, ensuring consistency across different environments.
+- **Orchestration**: Kubernetes for managing and scaling the application based on the load, improving availability and resource utilization.
+- **CI/CD**: Implement continuous integration and continuous deployment using Jenkins or GitHub Actions to automate the build, test, and deployment pipeline.
+- **Monitoring**: Use Prometheus and Grafana for monitoring application performance and health.
+- **Cloud Provider**: Deploy on AWS using services like ECS or EKS, leveraging AWS RDS for a managed database solution if persistent storage is needed.
+
 
 ## License
 

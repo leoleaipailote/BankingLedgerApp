@@ -35,6 +35,8 @@ public class TransactionController {
             if (!debitOrCredit.equals("CREDIT"))
                 throw new IllegalArgumentException("This field has to be CREDIT");
             String userId = requestBody.getUserId();
+            // Process the load request and uses the returned transaction event to form
+            // response
             TransactionEvent event = transactionService.processLoad(messageId, userId, amount,
                     currency, debitOrCredit);
             return ResponseEntity
@@ -56,6 +58,8 @@ public class TransactionController {
             if (!debitOrCredit.equals("DEBIT"))
                 throw new IllegalArgumentException("This field has to be DEBIT");
             String userId = requestBody.getUserId();
+            // Process the authorize request and uses the returned transaction event to form
+            // response
             TransactionEvent event = transactionService.processAuthorization(messageId, userId, amount,
                     currency, debitOrCredit);
             return ResponseEntity

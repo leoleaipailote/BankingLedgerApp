@@ -101,16 +101,16 @@ For this project, I chose to implement a Spring Boot application due to its exte
 
 - **Error Handling and Validation**: Error handling ensures that only valid transactions are processed. Any attempt to process an invalid transaction (e.g., negative amounts, non-numerical amounts) is immediately caught and handled appropriately, returning a 500 error code.
 
-- ### Unit Testing
+- **Unit Testing**
 
-- **JUnit**: The primary framework used for unit testing. Each component, especially business logic handlers and utility classes, has corresponding unit tests that validate individual functions under controlled conditions.
+   - **JUnit**: The primary framework used for unit testing. Each component, especially business logic handlers and utility classes, has corresponding unit tests that validate individual functions under controlled conditions.
 
-- ### Integration Testing
+- **Integration Testing**
 
-- **MockMvc**: Utilized for integration testing, allowing simulation of HTTP requests and assertion of responses for the REST API. This framework is instrumental in testing controller endpoints under conditions that closely mimic actual runtime operation.
-- **Endpoint Testing**: Specific tests for `loadFunds` and `authorizeFunds` endpoints check how the system processes transactions, including both normal and edge cases.
-- **Exception Handling**: Tests also cover scenarios where exceptions are expected to be thrown, ensuring that the system responds with appropriate error messages and status codes.
-- **Response Validation**: Integration tests verify that responses are correctly formatted and contain all expected elements, ensuring the API's contract is adhered to.
+   - **MockMvc**: Utilized for integration testing, allowing simulation of HTTP requests and assertion of responses for the REST API. This framework is instrumental in testing controller endpoints under conditions that closely mimic actual runtime operation.
+   - **Endpoint Testing**: Specific tests for `loadFunds` and `authorizeFunds` endpoints check how the system processes transactions, including both normal and edge cases.
+   - **Exception Handling**: Tests also cover scenarios where exceptions are expected to be thrown, ensuring that the system responds with appropriate error messages and status codes.
+   - **Response Validation**: Integration tests verify that responses are correctly formatted and contain all expected elements, ensuring the API's contract is adhered to.
 
 
 

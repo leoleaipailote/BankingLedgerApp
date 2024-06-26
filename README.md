@@ -17,20 +17,12 @@ The service, based on the [service.yml](service.yml) OpenAPI 3.0 schema, accepts
 
 Both endpoints return the updated balance after the transaction. Declined authorizations are recorded even if they don't affect the balance.
 
-## Expectations
+## Goals
 In building this project, I focused on the following:
 1. Supporting all requests as defined in the schema.
 2. Ensuring responses conform to the prescribed schema.
 3. Implementing the authorizations endpoint as documented.
 4. Writing comprehensive unit and integration tests.
-
-## Evaluation Criteria
-Here's how I approached the project:
-
-- **Design Patterns**: I adhered to the event sourcing model.
-- **Correctness**: My implementation effectively follows the desired pattern and meets the specified requirements.
-- **Testing**: I developed a robust test suite, including unit and integration tests, covering critical functionalities, edge cases, and potential failure scenarios.
-- **Documentation and Clarity**: I aimed for clear documentation, including comments within the code, README files, and explanations of design decisions.
 
 ## Bootstrap Instructions
 
